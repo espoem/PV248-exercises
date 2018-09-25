@@ -4,7 +4,14 @@ import sys
 from collections import Counter
 from operator import itemgetter
 
+# regular expressions
 RE_YEAR = re.compile(r".*?(\d{4}|\d{2}th).*?")
+
+# options
+CMD_COMPOSER = "composer"
+CMD_CENTURY = "century"
+
+CMD_OPTIONS = [CMD_COMPOSER, CMD_CENTURY]
 
 
 def readlines(fp):
@@ -41,11 +48,6 @@ def extract_data(file_path, opt):
 
     return results
 
-
-CMD_COMPOSER = "composer"
-CMD_CENTURY = "century"
-
-CMD_OPTIONS = [CMD_COMPOSER, CMD_CENTURY]
 
 if __name__ == "__main__":
     args = sys.argv
