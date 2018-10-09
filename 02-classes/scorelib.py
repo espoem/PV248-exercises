@@ -53,8 +53,12 @@ def load(filename):
             data = init_data()
             continue
 
-        attr_type = line_split[0].lower()
-        attr_value = line_split[1].strip() if line_split[1] else ""
+        if line_split and line_split.strip():
+            attr_type = line_split[0].lower()
+            attr_value = line_split[1].strip() if line_split[1] else ""
+        else:
+            attr_type = ""
+            attr_value = ""
         if "print" in attr_type:
             data["print_id"] = int(attr_value)
         elif attr_type == "partiture":
