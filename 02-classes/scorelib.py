@@ -53,9 +53,9 @@ def load(filename):
             data = init_data()
             continue
 
-        if line_split and line_split.strip():
+        if line_split:
             attr_type = line_split[0].lower()
-            attr_value = line_split[1].strip() if line_split[1] else ""
+            attr_value = line_split[1].strip() if len(line_split) > 1 else ""
         else:
             attr_type = ""
             attr_value = ""
@@ -74,9 +74,9 @@ def load(filename):
                     years = RE_YEAR.findall(split[1])
                     if not years:
                         continue
-                    born = years[0]
+                    born = int(years[0])
                     if len(years) > 1:
-                        died = years[1]
+                        died = int(years[1])
                 data["composers"].append({"name": name, "born": born, "died": died})
         elif attr_type == "title":
             data["title"] = attr_value if attr_value else None
