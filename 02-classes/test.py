@@ -20,7 +20,6 @@ if __name__ == "__main__":
     filepath = args[1]
 
     prints = scorelib.load(filepath)
-    print(len(prints))
     prints_str = [print_.format() for print_ in prints]
 
     # with open('./out.txt', 'w', encoding='utf-8') as f:

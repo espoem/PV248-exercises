@@ -43,7 +43,8 @@ def load(filename):
                 authors,
             )
 
-            editors = [Person(data.get("editor"))]
+            # editors = [Person(data.get("editor"))]
+            editors = [Person(editor, None, None) for editor in data.get("editors", [])]
             # create edition
             edition = Edition(composition, editors, data.get("edition"))
 
@@ -113,7 +114,15 @@ def load(filename):
         elif attr_type == "edition":
             data["edition"] = attr_value if attr_value else None
         elif attr_type == "editor":
-            data["editor"] = attr_value if attr_value else None
+            regex = re.compile(r"\w\.,")
+            match = regex.search(attr_value)
+            if match:
+                editors = attr_value.split(".,")
+                editors = [editor.strip(" .")+"." for editor in editors]
+                data["editors"] = editors
+            else:
+                data["editors"] = [attr_value] if attr_value else []
+            # data["editor"] = attr_value if attr_value else None
 
     return prints
 class Print:
