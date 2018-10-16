@@ -2,6 +2,7 @@ import os
 import sqlite3
 from scorelib import Person
 import scorelib
+import sys
 
 def insert_person(person: Person, connection):
     cur = connection.cursor()
@@ -84,7 +85,14 @@ def insert_print(print_, edition_id, connection):
     connection.commit()
 
 if __name__ == "__main__":
-    DB = "scorelib.dat"
+    args = sys.argv
+    if len(args) < 3:
+        print("Wrong number of arguments.")
+        print("./import.py INPUT OUTPUT")
+        exit(1)
+
+    data_file = args[1]
+    DB = args[2]
     here = os.path.abspath(os.path.dirname(__file__))
     with open(os.path.join(here, 'scorelib.sql')) as f:
         sql_script = f.read()
@@ -98,12 +106,8 @@ if __name__ == "__main__":
     else:
         conn.commit()
 
-    prints = scorelib.load(os.path.join(here, 'scorelib.txt'))
-    size = len(prints)
-    c = 1
+    prints = scorelib.load(os.path.join(here, data_file))
     for print_ in prints:
-        print("Print", c)
-        c += 1
         edition = print_.edition
         composition = print_.composition()
         score_id = insert_score(composition, conn)
