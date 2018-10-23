@@ -184,6 +184,9 @@ class Print:
     def _editors_line_value(self, edition):
         return ", ".join([editor.name for editor in edition.authors if editor.name])
 
+    def __repr__(self):
+        return "<Print: id={id}, edition={edition}, partiture={partiture}".format(id=self.print_id, edition=self.edition, partiture=self.partiture)
+
 
 class Edition:
     def __init__(self, composition=None, authors=None, name=None):
