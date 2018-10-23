@@ -4,9 +4,18 @@ import sys
 
 import scorelib
 from scorelib import Person
+import logging
+
+here = os.path.abspath(os.path.dirname(__file__))
+
+logger = logging.getLogger(__name__)
+FH = logging.FileHandler(os.path.join(here, 'log.txt'), mode='w', encoding='utf-8')
+logger.addHandler(FH)
+logger.setLevel(logging.DEBUG)
 
 
 def insert_person(person: Person, connection):
+    logger.debug("Insert person %s", person)
     cur = connection.cursor()
     cur.execute("SELECT * FROM person WHERE name=?", (person.name,))
     person_found = cur.fetchone()
@@ -14,8 +23,9 @@ def insert_person(person: Person, connection):
     if person_found:
         if (person_found[1] and person_found[2]) or not (person.born and person.died):
             return person_found[0]
-        born = person_found[1] if not person_found[1] else person.born
-        died = person_found[2] if not person_found[2] else person.died
+        logger.debug("Person data from DB %s", person_found)
+        born = person_found[1] if person_found[1] else person.born
+        died = person_found[2] if person_found[2] else person.died
         sql = f"UPDATE person SET born=?, died=? WHERE name=?"
         cur.execute(sql, (born, died, person.name))
         connection.commit()
@@ -33,7 +43,7 @@ def insert_voice(voice, voice_number, score_id, connection):
     # voice_found = cur.fetchone()
     # if voice_found:
     #     return voice_found[0]
-
+    logger.debug("Insert voice %s", voice)
     cur.execute(
         "INSERT OR IGNORE INTO voice VALUES(NULL, ?, ?, ?, ?)",
         (voice_number, score_id, voice.range, voice.name),
@@ -51,12 +61,14 @@ def insert_edition(edition, score_id, connection):
     if edition_found:
         return edition_found[0]
 
+    logger.debug("Insert edition %s", edition)
     cur.execute("INSERT INTO edition VALUES(NULL, ?,?,NULL)", (score_id, edition.name))
     connection.commit()
     return cur.lastrowid
 
 
 def insert_score(score, connection):
+    logger.debug("Insert score %s", score)
     cur = connection.cursor()
     cur.execute("SELECT * FROM score WHERE name=?", (score.name,))
     score_found = cur.fetchone()
@@ -87,6 +99,7 @@ def insert_score(score, connection):
 
 
 def insert_score_author(score_id, composer_id, connection):
+    logger.debug("Insert score-author %s %s", score_id, composer_id)
     cur = connection.cursor()
     cur.execute(
         "INSERT OR IGNORE INTO score_author VALUES(NULL,?,?)", (score_id, composer_id)
@@ -95,6 +108,7 @@ def insert_score_author(score_id, composer_id, connection):
 
 
 def insert_edition_author(edition_id, editor_id, connection):
+    logger.debug("Insert edition-author %s %s", edition_id, editor_id)
     cur = connection.cursor()
     cur.execute(
         "INSERT OR IGNORE INTO edition_author VALUES(NULL,?,?)", (edition_id, editor_id)
@@ -103,6 +117,7 @@ def insert_edition_author(edition_id, editor_id, connection):
 
 
 def insert_print(print_, edition_id, connection):
+    logger.debug("Insert print %s", print_)
     cur = connection.cursor()
     if print_.partiture:
         pmsg = "Y"
@@ -123,7 +138,6 @@ if __name__ == "__main__":
 
     data_file = args[1]
     DB = args[2]
-    here = os.path.abspath(os.path.dirname(__file__))
     with open(os.path.join(here, "scorelib.sql")) as f:
         sql_script = f.read()
     conn = sqlite3.connect(DB)
