@@ -1,7 +1,6 @@
 import sys
 import sqlite3
 import os
-import scorelib
 import json
 
 if __name__ == "__main__":
