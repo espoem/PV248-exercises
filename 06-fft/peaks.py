@@ -1,6 +1,4 @@
-import math
 import os
-import struct
 import sys
 import wave
 
