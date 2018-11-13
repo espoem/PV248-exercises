@@ -8,11 +8,13 @@ import numpy as np
 
 PITCHES = ["c", "cis", "d", "es", "e", "f", "fis", "g", "gis", "a", "bes", "b"]
 
+
 def octave_str(pitch, octave):
     if octave < 3:
         return pitch.title() + "," * (2 - octave)
     else:
         return pitch + "'" * (octave - 3)
+
 
 def get_pitch(frequency, default_frequency):
     C0 = default_frequency * pow(2, -4.75)
@@ -29,11 +31,8 @@ def get_pitch(frequency, default_frequency):
         pitch -= 1
         cents += 100
 
-    return (
-        octave_str(PITCHES[pitch], octave)
-        + ("+" if cents >= 0 else "")
-        + str(cents)
-    )
+    pitch_str = octave_str(PITCHES[pitch], octave) + ("+" if cents >= 0 else "") + str(cents)
+    return pitch_str
 
 
 if __name__ == "__main__":
@@ -102,8 +101,12 @@ if __name__ == "__main__":
     pitches = []
     for t, peak in enumerate(peaks):
         if t > 0:
-            if (set(peak) != set(peaks[t-1])):
-                print("{:.1f}-{:.1f} {}".format(window_start, window_end, " ".join(pitches)))
+            if set(peak) != set(peaks[t - 1]):
+                print(
+                    "{:.1f}-{:.1f} {}".format(
+                        window_start, window_end, " ".join(pitches)
+                    )
+                )
                 window_start = window_end
                 pitches = [get_pitch(frequency, default_freq) for frequency in peak]
         else:
