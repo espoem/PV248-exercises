@@ -97,7 +97,7 @@ if __name__ == "__main__":
         peaks_window = sorted(peaks_aux.items(), key=lambda kv: kv[1], reverse=True)[:3]
         peaks_window = [p[0] for p in peaks_window]
         peaks.append(peaks_window)
-        print(peaks_window)
+        # print(peaks_window)
 
     # convert peaks to pitches
     window_start = 0
