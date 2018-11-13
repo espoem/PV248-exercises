@@ -88,11 +88,8 @@ if __name__ == "__main__":
             peaks_candidates = sorted(
                 peaks_aux.items(), key=lambda kv: kv[1], reverse=True
             )[:3]
-            try:
-                peaks_aux[peaks_candidates[i][0] + 1] = 0
-                peaks_aux[peaks_candidates[i][0] - 1] = 0
-            except:
-                pass
+            peaks_aux[peaks_candidates[i][0] + 1] = 0
+            peaks_aux[peaks_candidates[i][0] - 1] = 0
             # print(i, peaks_candidates)
         peaks_window = sorted(peaks_aux.items(), key=lambda kv: kv[1], reverse=True)[:3]
         peaks_window = [p[0] for p in peaks_window]
