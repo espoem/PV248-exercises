@@ -38,10 +38,9 @@ def regression(dataset):
     # print(elapsed_times)
     cumulated_points = cumulate([x[1] for x in data_sorted])
     # print(cumulated_points)
-    # x = numpy.vstack([elapsed_times, numpy.ones(len(elapsed_times))]).T
-    x = numpy.vstack([elapsed_times]).T
+    x = numpy.vstack([elapsed_times, numpy.zeros(len(elapsed_times))]).T
+    # x = numpy.vstack([elapsed_times]).T
     y = numpy.array(cumulated_points)
-    # print(x)
     slope, *_ = numpy.linalg.lstsq(x, y, rcond=None)
     slope = slope[0]
     if slope != 0:
