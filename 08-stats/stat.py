@@ -45,7 +45,7 @@ def main():
     data_res = defaultdict(dict)
     for key, value in data_aux.items():
         np_val_arr = numpy.array(list(value.values()))
-        data_res[key]["mean"] = round(numpy.mean(np_val_arr), 4)
+        data_res[key]["mean"] = numpy.mean(np_val_arr)
         data_res[key]["median"] = numpy.median(np_val_arr)
         data_res[key]["passed"] = len(np_val_arr[np_val_arr > 0])
         quantiles = numpy.quantile(np_val_arr, [0.25, 0.75], interpolation="midpoint")
