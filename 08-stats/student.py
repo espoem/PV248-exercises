@@ -37,7 +37,9 @@ def regression(dataset):
     ]
     # print(elapsed_times)
     cumulated_points = cumulate([x[1] for x in data_sorted])
-    x = numpy.vstack([elapsed_times, numpy.ones(len(elapsed_times))]).T
+    # print(cumulated_points)
+    # x = numpy.vstack([elapsed_times, numpy.ones(len(elapsed_times))]).T
+    x = numpy.vstack([elapsed_times]).T
     y = numpy.array(cumulated_points)
     # print(x)
     slope, *_ = numpy.linalg.lstsq(x, y, rcond=None)
@@ -64,8 +66,8 @@ def main():
 
     header_parsed = False
     header = None
-    key = None
-    data_aux = {}
+    points_per_exercise = {}
+    points_per_date = {}
     with open(csv_file) as f:
         reader = csv.reader(f)
         for row in reader:
@@ -75,30 +77,40 @@ def main():
                 continue
             for idx in range(1, len(row)):
                 key_split = header[idx].strip().split("/")
-                key = key_split[0]
+                key_exercise = key_split[1]
+                key_date = key_split[0]
 
-                if not key in data_aux:
-                    data_aux[key] = defaultdict(lambda: 0)
-                data_aux[key][row[0]] += float(row[idx])
-    # print(data_aux)
+                if not key_exercise in points_per_exercise:
+                    points_per_exercise[key_exercise] = defaultdict(lambda: 0)
+                points_per_exercise[key_exercise][row[0]] += float(row[idx])
+
+                if not key_date in points_per_date:
+                    points_per_date[key_date] = defaultdict(lambda: 0)
+                points_per_date[key_date][row[0]] += float(row[idx])
+    # print(points_per_exercise)
 
     if mode == "average":
-        data_student = average_student_data(data_aux)
+        data_student_exercise = average_student_data(points_per_exercise)
+        data_student_date = average_student_data(points_per_date)
     else:
         student_id = mode
-        data_student = {}
-        for k, v in data_aux.items():
-            data_student[k] = v[student_id]
+        data_student_exercise = {}
+        for k, v in points_per_exercise.items():
+            data_student_exercise[k] = v[student_id]
+        data_student_date = {}
+        for k, v in points_per_date.items():
+            data_student_date[k] = v[student_id]
 
-    # print(data_student)
+    # print(data_student_exercise)
+    # print(data_student_date)
     data_res = {}
-    points = numpy.array(list(data_student.values()))
+    points = numpy.array(list(data_student_exercise.values()))
     data_res["mean"] = numpy.mean(points)
     data_res["median"] = numpy.median(points)
     data_res["passed"] = len(points[points > 0])
     data_res["total"] = numpy.sum(points)
 
-    slope, date16, date20 = regression(data_student)
+    slope, date16, date20 = regression(data_student_date)
     data_res["slope"] = slope
     if slope != 0:
         data_res["date 16"] = date16.isoformat()
