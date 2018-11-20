@@ -87,9 +87,17 @@ if __name__ == "__main__":
             peaks_candidates = sorted(
                 peaks_aux.items(), key=lambda kv: kv[1], reverse=True
             )[:3]
-            peaks_aux[peaks_candidates[i][0] + 1] = 0
-            peaks_aux[peaks_candidates[i][0] - 1] = 0
+            try:
+                del peaks_aux[peaks_candidates[i][0] + 1]
+            except:
+                pass
+            try:
+                del peaks_aux[peaks_candidates[i][0] - 1]
+            except:
+                pass
+
             # print(i, peaks_candidates)
+            # print(peaks_aux)
         peaks_window = sorted(peaks_aux.items(), key=lambda kv: kv[1], reverse=True)[:3]
         peaks_window = [p[0] for p in peaks_window]
         peaks.append(sorted(peaks_window))
@@ -100,7 +108,6 @@ if __name__ == "__main__":
     window_end = 0
     pitches = []
     for t, peak in enumerate(peaks):
-        # print(t, peak)
         if t > 0:
             if set(peak) != set(peaks[t - 1]):
                 print(
