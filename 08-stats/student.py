@@ -110,7 +110,7 @@ def main():
     data_res["total"] = numpy.sum(points)
 
     slope, date16, date20 = regression(data_student_date)
-    data_res["slope"] = slope
+    data_res["regression slope"] = slope
     if slope != 0:
         data_res["date 16"] = date16.isoformat()
         data_res["date 20"] = date20.isoformat()
