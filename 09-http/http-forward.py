@@ -108,11 +108,8 @@ def get_handler(url):
 def run(server_class=HTTPServer, handler_class=BaseHTTPRequestHandler, port=8000):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        pass
-    httpd.server_close()
+    httpd.serve_forever()
+    return httpd
 
 
 if __name__ == "__main__":
@@ -126,4 +123,11 @@ if __name__ == "__main__":
         exit(1)
     url = args[2]
 
-    run(HTTPServer, get_handler(url), port)
+    httpd = None
+    try:
+        httpd = run(HTTPServer, get_handler(url), port)
+    except KeyboardInterrupt:
+        print("Server closed")
+    finally:
+        if httpd:
+            httpd.server_close()
