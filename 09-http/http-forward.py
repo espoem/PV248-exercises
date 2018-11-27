@@ -117,11 +117,11 @@ def run(server_class=HTTPServer, handler_class=BaseHTTPRequestHandler, port=8000
 
 if __name__ == "__main__":
     args = sys.argv
-    if len(args < 2):
+    if len(args) < 2:
         print("Port is missing")
         exit(1)
     port = int(args[1])
-    if len(args < 3):
+    if len(args) < 3:
         print("Target URL not specified")
         exit(1)
     url = args[2]
