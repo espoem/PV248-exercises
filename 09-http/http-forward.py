@@ -28,10 +28,10 @@ def get_handler(url):
                     content = response.read().decode("UTF-8")
                     prepared_data = self._output_dict(response.status, response.getheaders(), content)
                     self.respond(200, prepared_data)
-            except urllib.error.HTTPError as error:
-                return self.respond(error.code, headers=None, content=error.reason)
-            except:
-                prepared_data = self._output_dict("timeout")
+            # except urllib.error.HTTPError as error:
+            #     return self.respond(error.code, headers=None, content=error.reason)
+            except Exception as e:
+                prepared_data = self._output_dict("timeout", headers=None, content=str(e))
                 self.respond(200, prepared_data)
 
         def respond(self, status_code, content_dict):
@@ -109,10 +109,10 @@ def get_handler(url):
                     res_content = response.read().decode("UTF-8")
                     prepared_data = self._output_dict(response.status, headers=response.getheaders(), content=res_content)
                     self.respond(200, prepared_data)
-            except urllib.error.HTTPError as error:
-                return self.respond(error.code, headers=None, content=error.reason)
-            except:
-                prepared_data = self._output_dict('timeout')
+            # except urllib.error.HTTPError as error:
+            #     return self.respond(error.code, headers=None, content=error.reason)
+            except Exception as e:
+                prepared_data = self._output_dict('timeout', headers=None, content=str(e))
                 self.respond(200, prepared_data)
 
     return ServerHandler
