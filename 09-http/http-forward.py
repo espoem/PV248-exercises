@@ -25,7 +25,7 @@ def get_handler(url):
             try:
                 with request.urlopen(new_request, timeout=1) as response:
                     content = response.read().decode("UTF-8")
-                    prepared_data = self._output_dict(200, response.getheaders(), content)
+                    prepared_data = self._output_dict(response.getcode(), response.getheaders(), content)
                     self.respond(200, prepared_data)
             except:
                 prepared_data = self._output_dict("timeout")
@@ -104,7 +104,7 @@ def get_handler(url):
             try:
                 with request.urlopen(new_request, timeout=timeout) as response:
                     res_content = response.read().decode("UTF-8")
-                    prepared_data = self._output_dict(200, headers=response.getheaders(), content=res_content)
+                    prepared_data = self._output_dict(response.getcode(), headers=response.getheaders(), content=res_content)
                     self.respond(200, prepared_data)
             except:
                 prepared_data = self._output_dict('timeout')
