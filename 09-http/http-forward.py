@@ -1,4 +1,5 @@
 import sys
+import urllib
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib import parse, request
 import json
@@ -25,8 +26,10 @@ def get_handler(url):
             try:
                 with request.urlopen(new_request, timeout=1) as response:
                     content = response.read().decode("UTF-8")
-                    prepared_data = self._output_dict(response.getcode(), response.getheaders(), content)
+                    prepared_data = self._output_dict(response.status, response.getheaders(), content)
                     self.respond(200, prepared_data)
+            except urllib.error.HTTPError as error:
+                return self.respond(error.code, headers=None, content=error.reason)
             except:
                 prepared_data = self._output_dict("timeout")
                 self.respond(200, prepared_data)
@@ -104,8 +107,10 @@ def get_handler(url):
             try:
                 with request.urlopen(new_request, timeout=timeout) as response:
                     res_content = response.read().decode("UTF-8")
-                    prepared_data = self._output_dict(response.getcode(), headers=response.getheaders(), content=res_content)
+                    prepared_data = self._output_dict(response.status, headers=response.getheaders(), content=res_content)
                     self.respond(200, prepared_data)
+            except urllib.error.HTTPError as error:
+                return self.respond(error.code, headers=None, content=error.reason)
             except:
                 prepared_data = self._output_dict('timeout')
                 self.respond(200, prepared_data)
