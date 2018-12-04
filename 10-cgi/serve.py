@@ -3,6 +3,7 @@ import socketserver
 import sys
 import urllib.parse
 from http.server import HTTPServer, CGIHTTPRequestHandler, SimpleHTTPRequestHandler
+from http import HTTPStatus
 
 
 def get_handler():
@@ -28,6 +29,11 @@ def get_handler():
                 # self.send_head()
                 self.run_cgi()  # handles GET and POST methods
             else:
+                path = self.path[1:]
+                curr_dir = os.getcwd()
+                if path and os.path.isdir(os.path.join(curr_dir, path)):
+                    self.send_error(HTTPStatus.FORBIDDEN, "Can't serve a directory.")
+                    return
                 # self.send_head()
                 file = SimpleHTTPRequestHandler.send_head(self)
                 if file:
