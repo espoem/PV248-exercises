@@ -74,14 +74,17 @@ def get_handler(url):
 
             method = "GET"
             if "type" in content_dict:
-                method = content_dict["type"]
+                method = content_dict["type"].upper()
 
             if "url" not in content_dict or (method == "POST" and "content" not in content_dict):
                 prepared_data = self._output_dict("invalid json")
                 self.respond(200, prepared_data)
                 return
 
-            url = content_dict["url"]
+            target_url = content_dict["url"]
+            match = http_re.match(target_url)
+            if not match:
+                target_url = "http://" + target_url
             headers = content_dict.get("headers", {})
             timeout = content_dict.get("timeout", 1)
 
@@ -97,7 +100,7 @@ def get_handler(url):
             if method == "POST":
                 data = bytes(content_dict.get("content", ""), "UTF-8")
 
-            new_request = request.Request(url=url, data=data, headers=headers, method=method)
+            new_request = request.Request(url=target_url, data=data, headers=headers, method=method)
             try:
                 with request.urlopen(new_request, timeout=timeout) as response:
                     res_content = response.read().decode("UTF-8")
