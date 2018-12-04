@@ -2,13 +2,18 @@ import sys
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib import parse, request
 import json
+import re
 
+http_re = re.compile(r"^https?://")
 
 def get_handler(url):
     class ServerHandler(BaseHTTPRequestHandler):
         def do_GET(self):
             params = parse.urlparse(self.path).query
             target_url = url
+            match = http_re.match(target_url)
+            if not match:
+                target_url = "http://" + target_url
             if params:
                 target_url = "{}?{}".format(target_url, params)
 
