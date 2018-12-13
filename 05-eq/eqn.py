@@ -48,7 +48,7 @@ if __name__ == "__main__":
         exit(0)
 
     if vars_count > r1 and vars_count > r2:
-        print("solution space dimension: {}".format(vars_count - eq_count))
+        print("solution space dimension: {}".format(vars_count - r1))
         exit(0)
 
     solutions = linalg.solve(matrix, matrix_augmented.T[-1])
