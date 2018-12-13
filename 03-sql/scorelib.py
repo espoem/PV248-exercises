@@ -51,6 +51,7 @@ def load(filename):
             if data.get("print_id") is not None:
                 print_ = Print(edition, data["print_id"], data["partiture"])
                 prints.append(print_)
+                # print(print_)
             data = init_data()
             continue
 
@@ -126,6 +127,8 @@ def load(filename):
             # data["editor"] = attr_value if attr_value else None
 
     return prints
+
+
 class Print:
     def __init__(self, edition, print_id: int, partiture: bool):
         self.edition = edition
