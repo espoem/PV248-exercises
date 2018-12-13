@@ -28,12 +28,12 @@ def insert_person(person: Person, connection):
         died = person_found[2] if person_found[2] else person.died
         sql = f"UPDATE person SET born=?, died=? WHERE name=?"
         cur.execute(sql, (born, died, person.name))
-        connection.commit()
+        # connection.commit()
         return person_found[0]
 
     sql = "INSERT INTO person(born, died, name) VALUES (?,?,?)"
     cur.execute(sql, (person.born, person.died, person.name))
-    connection.commit()
+    # connection.commit()
     return cur.lastrowid
 
 
@@ -48,7 +48,7 @@ def insert_voice(voice, voice_number, score_id, connection):
         "INSERT OR IGNORE INTO voice VALUES(NULL, ?, ?, ?, ?)",
         (voice_number, score_id, voice.range, voice.name),
     )
-    connection.commit()
+    # connection.commit()
     # return cur.lastrowid
 
 
@@ -63,7 +63,7 @@ def insert_edition(edition, score_id, connection):
 
     logger.debug("Insert edition %s", edition)
     cur.execute("INSERT INTO edition VALUES(NULL, ?,?,NULL)", (score_id, edition.name))
-    connection.commit()
+    # connection.commit()
     return cur.lastrowid
 
 
@@ -94,7 +94,7 @@ def insert_score(score, connection):
         "INSERT INTO score(name,genre,key,incipit,year) VALUES(?,?,?,?,?)",
         (score.name, score.genre, score.key, score.incipit, score.year),
     )
-    connection.commit()
+    # connection.commit()
     return cur.lastrowid
 
 
@@ -104,7 +104,7 @@ def insert_score_author(score_id, composer_id, connection):
     cur.execute(
         "INSERT OR IGNORE INTO score_author VALUES(NULL,?,?)", (score_id, composer_id)
     )
-    connection.commit()
+    # connection.commit()
 
 
 def insert_edition_author(edition_id, editor_id, connection):
@@ -113,7 +113,7 @@ def insert_edition_author(edition_id, editor_id, connection):
     cur.execute(
         "INSERT OR IGNORE INTO edition_author VALUES(NULL,?,?)", (edition_id, editor_id)
     )
-    connection.commit()
+    # connection.commit()
 
 
 def insert_print(print_, edition_id, connection):
@@ -126,7 +126,7 @@ def insert_print(print_, edition_id, connection):
     cur.execute(
         "INSERT OR IGNORE INTO print VALUES(?,?,?)", (print_.print_id, pmsg, edition_id)
     )
-    connection.commit()
+    # connection.commit()
 
 
 if __name__ == "__main__":
@@ -166,4 +166,5 @@ if __name__ == "__main__":
         for idx, voice in enumerate(composition.voices, 1):
             insert_voice(voice, idx, score_id, conn)
 
+    conn.commit()
     conn.close()
