@@ -84,6 +84,9 @@ class Game:
         if self.end or self.winner is not None:
             return False, "Game is over."
 
+        if (x < 0 or x > 2) or (y < 0 or y > 2):
+            return False, "Coordinations [{},{}] out of board.".format(y, x)
+
         if self.board[y][x] != 0:
             return (
                 False,
@@ -92,9 +95,6 @@ class Game:
                     " Already filled by player {player}."
                 ).format(x=x, y=y, player=self.board[y][x]),
             )
-
-        if (x < 0 or x > 2) or (y < 0 or y > 2):
-            return False, "Coordinations [{},{}] out of board.".format(y, x)
 
         self.board[y][x] = player
         self.empty_cells -= 1
