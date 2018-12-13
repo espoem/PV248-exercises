@@ -1,37 +1,35 @@
-import sys
-import urllib
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib import parse, request
 import json
 import re
+import sys
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib import request
 
 http_re = re.compile(r"^https?://")
+
 
 def get_handler(url):
     class ServerHandler(BaseHTTPRequestHandler):
         def do_GET(self):
-            params = parse.urlparse(self.path).query
             target_url = url
             match = http_re.match(target_url)
             if not match:
                 target_url = "http://" + target_url
-            if params:
-                target_url = "{}?{}".format(target_url, params)
 
             headers = dict(self.headers)
             if "Host" in headers:
                 del headers["Host"]
 
-            new_request = request.Request(url=target_url, data=None, headers=headers, method="GET")
+            new_request = request.Request(url=target_url, data=None, headers=headers)
+            new_request.add_header("Accept-Encoding", "utf-8")
             try:
                 with request.urlopen(new_request, timeout=1) as response:
                     content = response.read().decode("UTF-8")
                     prepared_data = self._output_dict(response.status, response.getheaders(), content)
+                    print(prepared_data)
                     self.respond(200, prepared_data)
-            # except urllib.error.HTTPError as error:
-            #     return self.respond(error.code, headers=None, content=error.reason)
             except Exception as e:
                 prepared_data = self._output_dict("timeout", headers=None, content=str(e))
+                print(prepared_data)
                 self.respond(200, prepared_data)
 
         def respond(self, status_code, content_dict):
@@ -104,13 +102,13 @@ def get_handler(url):
                 data = bytes(content_dict.get("content", ""), "UTF-8")
 
             new_request = request.Request(url=target_url, data=data, headers=headers, method=method)
+            new_request.add_header("Accept-Encoding", "utf-8")
             try:
                 with request.urlopen(new_request, timeout=timeout) as response:
                     res_content = response.read().decode("UTF-8")
-                    prepared_data = self._output_dict(response.status, headers=response.getheaders(), content=res_content)
+                    prepared_data = self._output_dict(response.status, headers=response.getheaders(),
+                                                      content=res_content)
                     self.respond(200, prepared_data)
-            # except urllib.error.HTTPError as error:
-            #     return self.respond(error.code, headers=None, content=error.reason)
             except Exception as e:
                 prepared_data = self._output_dict('timeout', headers=None, content=str(e))
                 self.respond(200, prepared_data)
