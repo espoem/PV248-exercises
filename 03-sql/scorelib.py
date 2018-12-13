@@ -69,16 +69,17 @@ def load(filename):
             for author in authors:
                 split = author.split("(")
                 name = split[0].strip()
-                born = None
-                died = None
-                if len(split) > 1:
-                    years = RE_YEAR.findall(split[1])
-                    if not years:
-                        continue
-                    born = int(years[0])
-                    if len(years) > 1:
-                        died = int(years[1])
-                data["composers"].append({"name": name, "born": born, "died": died})
+                if name:
+                    born = None
+                    died = None
+                    if len(split) > 1:
+                        years = RE_YEAR.findall(split[1])
+                        if not years:
+                            continue
+                        born = int(years[0])
+                        if len(years) > 1:
+                            died = int(years[1])
+                    data["composers"].append({"name": name, "born": born, "died": died})
         elif attr_type == "title":
             data["title"] = attr_value if attr_value else None
         elif attr_type == "genre":
