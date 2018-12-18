@@ -13,7 +13,7 @@ if __name__ == "__main__":
         exit(1)
 
     here = os.path.dirname(__file__)
-    vars_parse = re.compile(r"([+-]? ?(\d*)(\w))")
+    vars_parse = re.compile(r"([+-]? *(\d*)(\w))")
     mtx_dict = {}
     vars_names = set()
     eq_count = 0
