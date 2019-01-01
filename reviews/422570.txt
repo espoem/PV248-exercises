@@ -1,0 +1,51 @@
+review od 422570, *0.5
+
+Review shrnuje testy po validních i nevalidních vstupech. Většina bodů se zaměřuje na nedostatky programátorských konvencí v kódu, především v nedostatečném rozdělení funkcionality do kratších, izolovaných funkcí. Nedostatků si jsem nyní více vědom.
+
+---------------------
+
+Úloha 8
+    Funkcionalita:
+	- Úlohu som testoval a nemám k funkcionalite žiadne výhrady. Na zadaných vstupoch dávaju oba skripty očakávané výsledky.
+    Úprava kódu:
+    	1. stat.py
+		- Kód je relatívne krátky a tak sa dá pochopiť čo robí
+		  ale aj napriek tomu by bolo vhodnejšie rozdeliť funkciu main() na viac menších funkcií.
+		  Kód by bol čitateľnejší a ľahšie by sa aj tebe v budúcnosti editoval.
+		- Pri práci so súborom je použitá premenná s názvom "f" (riadok 25).
+		  Je dobré vyhýbať sa takýmto názvom kôli ľahšiemu pochopeniu kódu.
+		  Je to skôr odporúčanie, pretože v dlhých skriptoch kde sú takéto názvy používané často je ťažké vyznať sa.
+    	2. student.py
+		- Aj napriek tomu, že v tomto skripte je použitých viacej pomocných funkcií,
+		  funkcia main() je stále veľmi dlhá a ťažko pochopiteľná (pre nezainteresovanú osobu).
+		  Bolo by vhodné pridať do nej aspoň komentáre.
+		  V prípade neskoršieho editovania kódu by aj pre teba bolo vďaka komentárom jednoduchšie sa v tom vyznať.
+		- Rovnaký komentár k názvom premenných ako pre skript stat.py s tým, že tu je jednopísmenkových premenných použitých viac.
+		- Premenná ROUND_DIGITS je zbytočne definovaná, pretože v kóde nie je nikde použitá.
+
+Úloha 11
+    Funkcionalita:
+	- Testoval som úlohu na validných aj nevalidných vstupoch.
+	  Odpovede na ne sedeli zadaniu a chybové hlášky boli jasne zrozumiteľné, čiže k funkcionalite nemám žiadne výhrady.
+    Úprava kódu:
+	- Myslím, že aj funkcie handle_start(), handle_play(), handle_status() a response() mohli byť označené ako privátne,
+	  keďže nie je potrebné ich volať mimo tejto triedy.
+	- Možno je to v pythone normálne ale príde mi zvláštne deklarovať triedu ServerHandler vo funkcii get_handler()
+	  keď je možné danú triedu predať ako parameter aj bez danej funkcie.
+	- Mimo toho je kód dobre štruktúrovaný, funkcie su relatívne krátke a už z ich názvov je jasné čo vykonávajú.
+	- Aj účel väčšiny premenných je jasný z ich pomenovania (až na pár výnimiek).
+	- Vo výsledku je kód ľahko pochopiteľný aj bez komentárov.
+
+Úloha 12
+    Funkcionalita:
+	- Aj túto úlohu som testoval na validných a nevalidných vstupoch.
+	  Všetko sedelo podľa zadania, aj priebežné dotazovanie na server prebiehalo v definovanom čase. Nemám teda k funkcionalite žiadne výhrady.
+    Úprava kódu:
+	1. ttt.py
+		- V podstate ide o rzšírenie skriptu z úlohy 11, takže z hľadiska úpravy kódu majú tie isté komentáre.
+	2. client.py
+		- funkcia main() by sa dala určite rozdelit do viacerych menších funkcií. Mimo nej sú ale ostatné funkcie krátke a ľahko pochopiteľné.
+		  Názvy premenných odpovedajú ich použitiu.
+
+Sumarizácia
+    K ani jednej úlohe som nenašiel žiadne funkčné nedostatky. Celý kód je až na pár malých nedostatkov na vysokej úrovni.
