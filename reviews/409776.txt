@@ -1,0 +1,88 @@
+review od 409776, *0.5
+
+Review mi pomohla si uvědomit, že logické celky je lepší rozdělit do jednotlivých funkcí i takovýchto jednoduchších a dále nerozšířených programů. Několik poznámek se dále týká menších úprav kódu jako nahrazení for cycklů list comprehension anebo poznámka o nadbytečných čárkách v některých částech. Pro formátování kódu jsem využil nástroj Black https://github.com/ambv/black, který upřednostňuje vlastní sadu pravidel pro formátování a toto je jedno z nich.
+
+Úlohu 5 jsem posílal jako chybně implementovanou, neboť po poslední změně implementace mi testy neprošly. Nakonec se ukázalo, že výstup testu byl chybný, a tedy implementace této úlohy byla vyhovující. Z toho trochu plyne, proč eq_count je nevyužitá proměnná. Zapomněl jsem ji odstranit po úpravách kódu. Oceňuji tip, jak se vyhnout budování celé rozšířené matice.
+
+------------------------------------------------------------------------------------------
+
+Ku každému skriptu pridávam niekoľko poznámok a na konci pár postrehov, ktoré sú platné všeobecne.
+
+-----------
+4. getprint.py
+
+skript je funkčný a výstup je rozumne formátovaný
+
+SQL dotaz je rozumne vytvorený a prehľadne napísaný
+
+oceňujem kontrolu počtu vstupných argumentov, zjednotil by som ale výstup s kontrolou, buď na výstup 'Not enough arguments' alebo kontrolu na 'len(args) != 2'
+
+results má ešte rozumnú dĺžku na to, aby sa dal napísať ako list comprehension:
+    results = [{"name": c[0], "born": c[1], "died": c[2]} for c in composers]
+keďže ale composers je typicky malá množina, táto zmena nebude mať žiadny praktický efekt na rýchlosť
+
+vo funkcii cur.execute() je nadbytočná čiarka, keďže definícia execute(sql[, parameters]) umožňuje ďalšie parametre a prázdný parameter funkčnosť nemení, nevzniká v tomto prípade chyba
+
+4. search.py
+
+skript je funkčný a výstup je rozumne formátovaný
+
+kontrola argumentov by sa mohla upraviť podobne ako v getprint.py
+
+oceňujem vyriešenie prípadu, kedy vstup je viacslovný, aj keď to nebolo v zadaní
+
+chýba uzavretie pripojenia conn.close()
+
+v každom cur.execute() sú nadbytočné čiarky ako v getprint.py
+
+samotné časti kódu sú čitateľné a dobre pomenované, pre celkový prehľad by som ale odporučil jednotlivé logické časti (ako jednoduché delenie môže poslúžiť najvyšší level for cyklov) vložiť do samostatnej funkcie tak, aby v "__main__" bol kratší kód.
+
+-----------
+5. eqn.py
+
+prázdny except: bez propagácie chyby nie je dobrou praktikou a môže spôsobiť neočakávané správanie
+v prípade sys.argv sa zrovna typicky dá chytiť IndexError, pokiaľ nie je dostatok argumentov alebo napísať kontrola ako v úlohe 4
+
+program je inak napísaný veľmi dobre a nenašiel som žiaden dôvod aby program nevypísal výstup ako v prípade testovania, nie je možné, že sa v repozitári nachádza iná verzia?
+
+veľmi oceňujem rozumné pomenovanie premenných, ktoré uľahčilo čítanie celého programu
+
+a aj keď 60 riadkov už považujem za hodné rozdelenia do menších častí, kód je stále prehľadný
+
+list comprehensions sú použité veľmi rozumne aj naopak nepoužité, kde by to bolo príliš komplikované alebo nečitateľné.
+
+veľmi vhodne sú použité štruktúry set() a defaultdict()
+
+counter eq_count je nadbytočný a nepoužitý
+
+[v for v in mtx_row] je to isté ako mtx_row
+
+nie je nutné vytvárať celú mtx_augmented, keďže chceme iba posledný stĺpec, môžeme ho pre linalg.solve() vytvoriť aj jednoducho cez list comprehension np.array([d['right'] for d in mtx_dict.values()])
+
+odporúčam držať sa štandardného import numpy as np (ako v úlohe 6)
+
+-----------
+6. peaks.py
+
+rovnaká pripomienka ku kontrole vstupných parametrov ako v úlohe 4
+
+'''
+        for i in range(0, len(frames), 2):
+            s.append(np.mean([frames[i], frames[i + 1]]))
+'''
+teoreticky sa môže stať, že len(frames) bude nepárny (lichý) a vznikne IndexError, v korekntom stereo wav by sa to ale nemalo stať a ani to nebolo testované
+
+celý program je napísaný veľmi kompaktne ale zároveň prehľadne
+
+skript je funkčný
+
+-----------
+Všeobecne
+
+oceňujem konzistentné použitie os.path
+
+každý skript má dobre pomenované premenné a reťazenie funkcií je použité prehľadne
+
+pri niektorých častiach by som určite porozmýšľal o samostatnej fukncii ale aj bez toho sa kód čítal dobre
+
+hoci sa nikde nepoužívalo spúšťanie v rámci balíčka, oceňujem, že bolo použité obalenie kódu do __main__, ktoré dáva zmysel pre prípadné ďalšie rozšírenie
